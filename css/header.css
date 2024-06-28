@@ -1,0 +1,25 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #d3d6da;
+}
+
+.header-img1 {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.header-title {
+  display: flex;
+  font-size: xx-large;
+  padding-left: 38%;
+  padding-right: 20%;
+}
+
+.header-img2 {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
