@@ -6,6 +6,7 @@ main {
   gap: 5px;
   /* gap은 내부요소 사이에 갭을 주기 때문에 main의 내부요소인 6개의 div들 사이에 갭을 줌 */
   margin-top: 7px;
+  margin-bottom: 30px;
 }
 
 .board-row {
