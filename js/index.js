@@ -6,22 +6,85 @@ let attempt = 0;
 let timer;
 
 function appStart() {
-  const displayGameover = () => {
+  const displayGameoverSuccess = () => {
     const div = document.createElement("div");
-    div.innerText = "게임이 종료됐습니다.";
+    div.innerText = "정답입니다.";
+    div.style =
+      "display:flex; justify-content:center; align-items:center; position:absolute; top:35vh; left:37vw; background-color:white; width:200px; height:50px; border:1px, solid, black;";
+
+    document.body.appendChild(div);
+
+    // 애니메이션 변수 설정
+    let scale = 1;
+    let direction = 1; // 1: 커지는 방향, -1: 작아지는 방향
+
+    // 애니메이션 함수 정의
+    const animate = () => {
+      // scale 값 조정
+      scale += 0.01 * direction;
+
+      // 최대 및 최소 scale 값 설정
+      if (scale >= 1.5) {
+        //direction = -1; // 작아지는 방향으로 전환
+        scale = 2;
+      } else if (scale <= 1) {
+        direction = 1; // 커지는 방향으로 전환
+      }
+
+      // transform 속성 설정
+      div.style.transform = `scale(${scale}) rotateZ(${scale * 360}deg)`;
+
+      // requestAnimationFrame으로 다음 프레임 요청
+      requestAnimationFrame(animate);
+    };
+
+    // 애니메이션 시작
+    animate();
+  };
+
+  const displayGameoverFail = () => {
+    const div = document.createElement("div");
+    div.innerText = "정답을 맞추지 못했습니다.";
     div.style =
       "display:flex; justify-content:center; align-items:center; position:absolute; top:35vh; left:37vw; background-color:white; width:200px; height:50px; border:1px, solid, black;";
     document.body.appendChild(div);
+
+    // 애니메이션 변수 설정
+    let scale = 1.5;
+    let direction = 1; // 1: 커지는 방향, -1: 작아지는 방향
+
+    // 애니메이션 함수 정의
+    const animate = () => {
+      // scale 값 조정
+      scale += 0.01 * direction;
+
+      // 최대 및 최소 scale 값 설정
+      if (scale >= 1.5) {
+        direction = -1; // 작아지는 방향으로 전환
+      } else if (scale <= 0.5) {
+        //direction = 1; // 커지는 방향으로 전환
+        scale = 0.5;
+      }
+
+      // transform 속성 설정
+      div.style.transform = `scale(${scale}) rotateZ(${scale * 720}deg)`;
+
+      // requestAnimationFrame으로 다음 프레임 요청
+      requestAnimationFrame(animate);
+    };
+
+    // 애니메이션 시작
+    animate();
   };
 
   const nextLine = () => {
+    attempt += 1;
+    index = 0;
     if (attempt === 6) {
       // 시도횟수는 최대 6번 가능
       return gameover();
       // 게임오버 시키고 함수탈출 시키기
     }
-    attempt += 1;
-    index = 0;
   };
 
   const gameover = () => {
@@ -31,7 +94,12 @@ function appStart() {
 
     window.removeEventListener("click", handleKeyboardClick);
 
-    displayGameover();
+    if (attempt < 6) {
+      displayGameoverSuccess();
+    } else {
+      displayGameoverFail();
+    }
+
     clearInterval(timer);
     // timer에 저장된 setInterval의 id를 clear해주면 종료시 타이머도 클리어 됨
   };
