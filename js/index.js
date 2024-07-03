@@ -28,6 +28,9 @@ function appStart() {
     window.removeEventListener("keydown", handleKeydown);
     // 종료할땐 이벤트리스너를 리무브 해주면 됨
     // 이렇게 하면 키다운 이벤트가 더 이상 적용되지 않음
+
+    window.removeEventListener("click", handleKeyboardClick);
+
     displayGameover();
     clearInterval(timer);
     // timer에 저장된 setInterval의 id를 clear해주면 종료시 타이머도 클리어 됨
@@ -55,18 +58,28 @@ function appStart() {
       //블럭에 입력된 글자
       const correctAnswer = answer[i];
       //정답글자
+
+      const keyboardBlock = document.querySelector(
+        `.key-block[data-key='${letter}']`
+      );
+
       if (letter === correctAnswer) {
         //둘이 같다면 위치도 같다는 거니까
         block.style.background = "#6AAA64";
         // 초록 컬러 주기
+        keyboardBlock.style.background = "#6AAA64";
+        // 키보드블럭에도 해당 알파벳에 초록 컬러 주기
         count += 1;
       } else if (answer.includes(letter)) {
         // answer(정답)안에 letter(블럭에 입력된 글자)가 포함 되어있으면 위치는 달라도 알파벳이 존재하니까
         block.style.background = "#C9B458";
+        keyboardBlock.style.background = "#C9B458";
         // 노랑 컬러 주기
-      } else block.style.background = "#787C7E";
-      //위치도 같지 않고 존재하지도 않는다면 회색 컬러 주기
-
+      } else {
+        block.style.background = "#787C7E";
+        //위치도 같지 않고 존재하지도 않는다면 회색 컬러 주기
+        keyboardBlock.style.background = "#787C7E";
+      }
       block.style.color = "white";
       //글씨색은 엔터 누름과 동시에 흰색으로 변경
     }
@@ -103,6 +116,25 @@ function appStart() {
     }
   };
 
+  const handleKeyboardClick = (event) => {
+    const key = event.target.getAttribute("data-key");
+
+    const thisBlock = document.querySelector(
+      `.board-block[data-index='${attempt}${index}']`
+    );
+    // thisBlock이라는 변수에 html의 블럭을 연결시키기
+    // 변수명을 작성하고 싶으면 백틱 사용하기
+
+    if (key === "backSpace") handleBackspace();
+    else if (index === 5) {
+      if (key === "ENTER") handleEnterKey();
+      return;
+    } else if ("A" <= key && key <= "Z") {
+      thisBlock.innerText = key;
+      index += 1;
+    }
+  };
+
   const startTimer = () => {
     const startTime = new Date();
 
@@ -126,6 +158,8 @@ function appStart() {
   window.addEventListener("keydown", handleKeydown);
   // 윈도우 자체에 이벤트리스터를 줘야 함
   // 누르자마자 반응하게 하려면 키다운(키업은 손을 뗐을 때 반응)
+
+  window.addEventListener("click", handleKeyboardClick);
 }
 
 appStart();
